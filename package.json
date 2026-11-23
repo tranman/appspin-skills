@@ -1,0 +1,25 @@
+{
+  "name": "appspin-skills",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "description": "Install or update appspin-skills in a repository: npx github:tranman/appspin-skills",
+  "repository": "github:tranman/appspin-skills",
+  "bin": {
+    "appspin-skills": "bin/appspin-skills.sh"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.13.0",
+    "globals": "17.14.0",
+    "prettier": "3.9.10",
+    "prettier-plugin-sh": "0.20.2"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "embeddedLanguageFormatting": "off",
+    "plugins": [
+      "prettier-plugin-sh"
+    ]
+  }
+}

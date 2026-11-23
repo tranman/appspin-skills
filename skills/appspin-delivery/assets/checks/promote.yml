@@ -1,0 +1,57 @@
+# An App's promote, which the agent starts on the operator's "yes":
+#   gh workflow run promote.yml -f sha=<sha>
+# It runs promote with the account token in the CLOUDFLARE_API_TOKEN secret, so no session holds it.
+name: promote
+run-name: promote ${{ inputs.sha }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: the commit of main to promote
+        required: true
+
+# One promote at a time, so none moves production under another; GitHub keeps one waiting, and a third
+# start cancels it.
+concurrency:
+  group: promote
+
+permissions:
+  contents: write
+  checks: read
+  statuses: read
+  actions: read
+
+jobs:
+  promote:
+    environment: production
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      # Full history and tags: promote reads the deploy tags and checks the commit is on main.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: ${{ hashFiles('.nvmrc') != '' && '.nvmrc' || '' }}
+          cache: ${{ hashFiles('package-lock.json') != '' && 'npm' || '' }}
+      - if: hashFiles('package-lock.json') != ''
+        run: npm ci
+      # Production's GitHub variables and secrets, such as a migration's database address.
+      - run: bash .agents/skills/appspin-delivery/scripts/deploy.sh env >> "$GITHUB_ENV"
+        env:
+          VARS: ${{ toJSON(vars) }}
+          SECRETS: ${{ toJSON(secrets) }}
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@users.noreply.github.com
+          id=$(bash .agents/skills/appspin-delivery/scripts/deploy.sh account)
+          echo "CLOUDFLARE_ACCOUNT_ID=$id" >> "$GITHUB_ENV"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - run: node .agents/skills/appspin-delivery/scripts/promote.mjs "$SHA"
+        env:
+          SHA: ${{ inputs.sha }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          GH_TOKEN: ${{ github.token }}

@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1230 384" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="13">
+  <title>The appspin delivery lifecycle</title>
+  <desc>A change moves from Plan through Code, Build, Test, Release, Deploy, Operate and Monitor; staging's checks let you promote, and promote smokes the candidate and moves production to it; review's findings return to implementation, and Monitor's to Plan.</desc>
+  <style>
+    .phase { fill: #f6f8fa; stroke: #d0d7de; }
+    .step { fill: #ffffff; stroke: #57606a; }
+    .branch { stroke-dasharray: 5 3; }
+    .name { font-weight: 600; fill: #1f2328; }
+    .tool { fill: #57606a; font-size: 12px; }
+    .title { font-weight: 700; fill: #57606a; font-size: 12px; letter-spacing: .04em; }
+    .flow { stroke: #57606a; stroke-width: 1.5; fill: none; }
+    .gate { stroke-dasharray: 4 3; }
+    .label { fill: #57606a; font-size: 11px; }
+    .head { fill: #57606a; }
+    @media (prefers-color-scheme: dark) {
+      .phase { fill: #161b22; stroke: #30363d; }
+      .step { fill: #0d1117; stroke: #8b949e; }
+      .name { fill: #e6edf3; }
+      .tool, .title, .label { fill: #8b949e; }
+      .flow { stroke: #8b949e; }
+      .head { fill: #8b949e; }
+    }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path class="head" d="M0 0 L10 5 L0 10 z"/>
+    </marker>
+  </defs>
+
+
+
+
+  <!-- top row: Plan, Code, Build, left to right -->
+  <rect class="phase" x="20" y="20" width="220" height="112" rx="8"/>
+  <text class="title" x="32" y="40">PLAN</text>
+  <rect class="step" x="60" y="56" width="140" height="52" rx="6"/>
+  <text class="name" x="130" y="78" text-anchor="middle">backlog</text>
+  <text class="tool" x="130" y="95" text-anchor="middle">items</text>
+  <rect class="phase" x="270" y="20" width="550" height="112" rx="8"/>
+  <text class="title" x="282" y="40">CODE</text>
+  <rect class="step" x="285" y="56" width="140" height="52" rx="6"/>
+  <text class="name" x="355" y="78" text-anchor="middle">implementation</text>
+  <text class="tool" x="355" y="95" text-anchor="middle">process · verify · e2e</text>
+  <rect class="step branch" x="475" y="56" width="140" height="52" rx="6"/>
+  <text class="name" x="545" y="78" text-anchor="middle">feature branch</text>
+  <text class="tool" x="545" y="95" text-anchor="middle">verify</text>
+  <rect class="step" x="665" y="56" width="140" height="52" rx="6"/>
+  <text class="name" x="735" y="78" text-anchor="middle">review</text>
+  <text class="tool" x="735" y="95" text-anchor="middle">appspin-review</text>
+  <rect class="phase" x="850" y="20" width="360" height="112" rx="8"/>
+  <text class="title" x="862" y="40">BUILD</text>
+  <rect class="step branch" x="865" y="56" width="140" height="52" rx="6"/>
+  <text class="name" x="935" y="78" text-anchor="middle">pull request</text>
+  <text class="tool" x="935" y="95" text-anchor="middle">verify</text>
+  <rect class="step branch" x="1055" y="56" width="140" height="52" rx="6"/>
+  <text class="name" x="1125" y="78" text-anchor="middle">main branch</text>
+  <text class="tool" x="1125" y="95" text-anchor="middle">verify</text>
+
+  <!-- bottom row: Test, Release, Deploy, Operate, Monitor, right to left -->
+  <rect class="phase" x="1040" y="230" width="170" height="112" rx="8"/>
+  <text class="title" x="1052" y="250">TEST</text>
+  <rect class="step" x="1055" y="266" width="140" height="52" rx="6"/>
+  <text class="name" x="1125" y="288" text-anchor="middle">staging</text>
+  <text class="tool" x="1125" y="305" text-anchor="middle">smoke · e2e</text>
+  <rect class="phase" x="797.5" y="230" width="170" height="112" rx="8"/>
+  <text class="title" x="809.5" y="250">RELEASE</text>
+  <rect class="step" x="812.5" y="266" width="140" height="52" rx="6"/>
+  <text class="name" x="882.5" y="288" text-anchor="middle">candidate</text>
+  <text class="tool" x="882.5" y="305" text-anchor="middle">built, no traffic</text>
+  <rect class="phase" x="555" y="230" width="170" height="112" rx="8"/>
+  <text class="title" x="567" y="250">DEPLOY</text>
+  <rect class="step" x="570" y="266" width="140" height="52" rx="6"/>
+  <text class="name" x="640" y="288" text-anchor="middle">promote</text>
+  <text class="tool" x="640" y="305" text-anchor="middle">migrate · smoke · tag</text>
+  <rect class="phase" x="312.5" y="230" width="170" height="112" rx="8"/>
+  <text class="title" x="324.5" y="250">OPERATE</text>
+  <rect class="step" x="327.5" y="266" width="140" height="52" rx="6"/>
+  <text class="name" x="397.5" y="288" text-anchor="middle">production</text>
+  <text class="tool" x="397.5" y="305" text-anchor="middle">live</text>
+  <rect class="phase" x="20" y="230" width="220" height="112" rx="8"/>
+  <text class="title" x="32" y="250">MONITOR</text>
+  <rect class="step" x="60" y="266" width="140" height="52" rx="6"/>
+  <text class="name" x="130" y="288" text-anchor="middle">explore</text>
+  <text class="tool" x="130" y="305" text-anchor="middle">Playwright MCP</text>
+
+  <!-- arrows: solid when code moves, dashed when a check lets it go on -->
+  <path class="flow gate" d="M200 82.0 H283" marker-end="url(#a)"/>
+  <text class="label" x="242.5" y="75.0" text-anchor="middle">ready</text>
+  <path class="flow" d="M425 82.0 H473" marker-end="url(#a)"/>
+  <text class="label" x="450" y="75.0" text-anchor="middle">push</text>
+  <path class="flow gate" d="M615 82.0 H663" marker-end="url(#a)"/>
+  <text class="label" x="640" y="75.0" text-anchor="middle">ready</text>
+  <path class="flow gate" d="M805 82.0 H863" marker-end="url(#a)"/>
+  <text class="label" x="835" y="75.0" text-anchor="middle">approved</text>
+  <path class="flow gate" d="M735 108 V150 H355 V110" marker-end="url(#a)"/>
+  <text class="label" x="545" y="163" text-anchor="middle">findings</text>
+  <path class="flow" d="M1005 82.0 H1053" marker-end="url(#a)"/>
+  <text class="label" x="1030" y="75.0" text-anchor="middle">merge</text>
+  <path class="flow" d="M1150 108 V264" marker-end="url(#a)"/>
+  <text class="label" x="1156" y="191">build</text>
+  <path class="flow" d="M1100 108 V181 H882.5 V264" marker-end="url(#a)"/>
+  <text class="label" x="991.25" y="174" text-anchor="middle">build</text>
+  <path class="flow gate" d="M1125 318 V362 H640 V320" marker-end="url(#a)"/>
+  <text class="label" x="1100" y="376" text-anchor="middle">ok</text>
+  <path class="flow" d="M710 292.0 H810.5" marker-end="url(#a)"/>
+  <text class="label" x="761.25" y="285.0" text-anchor="middle">smoke · move</text>
+  <path class="flow" d="M570 283.0 H469.5" marker-end="url(#a)"/>
+  <text class="label" x="518.75" y="276.0" text-anchor="middle">promote</text>
+  <path class="flow" d="M467.5 301.0 H568" marker-end="url(#a)"/>
+  <text class="label" x="518.75" y="317.0" text-anchor="middle">promote an older</text>
+  <path class="flow gate" d="M327.5 292.0 H202" marker-end="url(#a)"/>
+  <text class="label" x="263.75" y="285.0" text-anchor="middle">run</text>
+  <path class="flow gate" d="M130 266 V110" marker-end="url(#a)"/>
+  <text class="label" x="136" y="191">findings</text>
+</svg>

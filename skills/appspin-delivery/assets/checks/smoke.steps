@@ -1,0 +1,5 @@
+# smoke: does this copy work? A probe's name, its check, then  ::  and the control that must fail.
+# The target is $ORIGIN: an App's address, or a Software Package's commit or ref.
+
+# A Software Package: a probe that installs from the target, and a control that installs from a source that cannot exist.
+# An App: a probe and a control for each of the reference's four questions.

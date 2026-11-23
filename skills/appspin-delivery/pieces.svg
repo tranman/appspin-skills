@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 820" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="13">
+    <title>The pieces of the appspin delivery package</title>
+  <desc>Left, the package: the standard and its how-to and reference, four skills, and the installer; the delivery skill shows its steps, its scripts, its adapters, its templates, in three groups: templates for a change, agents' instructions, and the checks with what runs them. Right, your repository: AGENTS.md, the task runner and what each of its commands runs, the CI workflows, and the files tagged «package»: the push hook and the pull request template; and delivery.json, which holds the nine roles and the tool that fills each, grouped by how each is reached: repo and deploy through an adapter; runner and ci by running what the repository holds; harness, coding, review, and backlog where the agent works; and the knowledge base outside the code. The installer installs the package into the repository, adopt writes it, AGENTS.md sends agents to the standard, the task runner calls the delivery skill's scripts and reaches the two adapter roles, and the task runner and the CI workflows run on their roles' tools.</desc>
+  <style>
+    .phase { fill: #f6f8fa; stroke: #d0d7de; }
+    .step { fill: #ffffff; stroke: #57606a; }
+    .name { font-weight: 600; fill: #1f2328; }
+    .tool { fill: #57606a; font-size: 12px; }
+    .title { font-weight: 700; fill: #57606a; font-size: 12px; letter-spacing: .04em; }
+    .flow { stroke: #57606a; stroke-width: 1.5; fill: none; }
+    .gate { stroke-dasharray: 4 3; }
+    .label { fill: #57606a; font-size: 12px; }
+    .head { fill: #57606a; }
+    .stereo { fill: #57606a; font-size: 12px; font-style: italic; }
+    .group { fill: #57606a; font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+    @media (prefers-color-scheme: dark) {
+      .phase { fill: #161b22; stroke: #30363d; }
+      .step { fill: #0d1117; stroke: #8b949e; }
+      .name { fill: #e6edf3; }
+      .tool, .title, .label, .stereo, .group { fill: #8b949e; }
+      .flow { stroke: #8b949e; }
+      .head { fill: #8b949e; }
+    }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path class="head" d="M0 0 L10 5 L0 10 z"/>
+    </marker>
+  </defs>
+
+  <!-- the package -->
+  <rect class="phase" x="20" y="20" width="320" height="780" rx="6"/>
+  <text class="title" x="32" y="40" text-anchor="start">THE PACKAGE</text>
+  <rect class="step" x="40" y="56" width="280" height="52" rx="6"/>
+  <text class="name" x="180" y="78" text-anchor="middle">standard.md</text>
+  <text class="tool" x="180" y="95" text-anchor="middle">how-to.md · reference.md</text>
+  <rect class="step" x="40" y="128" width="280" height="294" rx="6"/>
+  <text class="stereo" x="180" y="146" text-anchor="middle">«skill»</text>
+  <text class="name" x="180" y="163" text-anchor="middle">appspin-delivery</text>
+  <rect class="phase" x="52" y="178" width="256" height="38" rx="6"/>
+  <text class="group" x="180" y="193" text-anchor="middle">STEPS</text>
+  <text class="tool" x="180" y="209" text-anchor="middle">adopt · promote · draft an item</text>
+  <rect class="phase" x="52" y="228" width="256" height="38" rx="6"/>
+  <text class="group" x="180" y="243" text-anchor="middle">SCRIPTS</text>
+  <text class="tool" x="180" y="259" text-anchor="middle">verify.sh · smoke.sh · promote.mjs · …</text>
+  <rect class="phase" x="52" y="278" width="256" height="54" rx="6"/>
+  <text class="group" x="180" y="293" text-anchor="middle">ADAPTERS</text>
+  <text class="tool" x="180" y="309" text-anchor="middle">github</text>
+  <text class="tool" x="180" y="324" text-anchor="middle">cloudflare</text>
+  <rect class="phase" x="52" y="344" width="256" height="70" rx="6"/>
+  <text class="group" x="180" y="359" text-anchor="middle">TEMPLATES</text>
+  <text class="tool" x="180" y="375" text-anchor="middle">templates · agents</text>
+  <text class="tool" x="180" y="390" text-anchor="middle">checks: verify.steps · Makefile</text>
+  <text class="tool" x="180" y="405" text-anchor="middle">verify.yml · staging.yml · pre-push</text>
+  <rect class="step" x="40" y="492" width="280" height="60" rx="6"/>
+  <text class="stereo" x="180" y="509" text-anchor="middle">«skill»</text>
+  <text class="name" x="180" y="526" text-anchor="middle">appspin-review</text>
+  <text class="tool" x="180" y="542" text-anchor="middle">reviews a branch</text>
+  <rect class="step" x="40" y="572" width="280" height="60" rx="6"/>
+  <text class="stereo" x="180" y="589" text-anchor="middle">«skill»</text>
+  <text class="name" x="180" y="606" text-anchor="middle">appspin-write</text>
+  <text class="tool" x="180" y="622" text-anchor="middle">writes what people read</text>
+  <rect class="step" x="40" y="652" width="280" height="60" rx="6"/>
+  <text class="stereo" x="180" y="669" text-anchor="middle">«skill»</text>
+  <text class="name" x="180" y="686" text-anchor="middle">appspin-explore</text>
+  <text class="tool" x="180" y="702" text-anchor="middle">explores a running copy</text>
+  <rect class="step" x="40" y="732" width="280" height="52" rx="6"/>
+  <text class="name" x="180" y="754" text-anchor="middle">appspin-skills.sh</text>
+  <text class="tool" x="180" y="771" text-anchor="middle">bin/</text>
+
+  <!-- your repository: its files on the left, delivery.json's roles on the right -->
+  <rect class="phase" x="460" y="20" width="800" height="780" rx="6"/>
+  <text class="title" x="472" y="40" text-anchor="start">YOUR REPOSITORY</text>
+  <rect class="step" x="480" y="56" width="340" height="52" rx="6"/>
+  <text class="name" x="650" y="78" text-anchor="middle">AGENTS.md</text>
+  <text class="tool" x="650" y="95" text-anchor="middle">the package's section · your lines</text>
+  <rect class="step" x="480" y="155" width="340" height="104" rx="6"/>
+  <text class="name" x="650" y="175" text-anchor="middle">task runner</text>
+  <text class="tool" x="631" y="195" text-anchor="end">verify</text>
+  <text class="tool" x="641" y="195">verify.steps</text>
+  <text class="tool" x="631" y="211" text-anchor="end">smoke</text>
+  <text class="tool" x="641" y="211">smoke.steps</text>
+  <text class="tool" x="631" y="227" text-anchor="end">e2e</text>
+  <text class="tool" x="641" y="227">e2e/</text>
+  <text class="tool" x="631" y="243" text-anchor="end">promote</text>
+  <text class="tool" x="641" y="243">promote.mjs</text>
+  <rect class="step" x="480" y="306" width="340" height="52" rx="6"/>
+  <text class="name" x="650" y="328" text-anchor="middle">CI workflows</text>
+  <text class="tool" x="650" y="345" text-anchor="middle">verify · smoke · e2e</text>
+  <rect class="step" x="480" y="405" width="340" height="60" rx="6"/>
+  <text class="stereo" x="650" y="422" text-anchor="middle">«package»</text>
+  <text class="name" x="650" y="439" text-anchor="middle">pre-push</text>
+  <text class="tool" x="650" y="455" text-anchor="middle">.githooks/</text>
+  <rect class="step" x="480" y="512" width="340" height="60" rx="6"/>
+  <text class="stereo" x="650" y="529" text-anchor="middle">«package»</text>
+  <text class="name" x="650" y="546" text-anchor="middle">pull_request_template.md</text>
+  <text class="tool" x="650" y="562" text-anchor="middle">.github/</text>
+  <rect class="step" x="910" y="56" width="334" height="728" rx="6"/>
+  <text class="name" x="1077" y="80" text-anchor="middle">delivery.json</text>
+  <text class="tool" x="1077" y="97" text-anchor="middle">each role and the tool that fills it</text>
+  <text class="group" x="932" y="126" text-anchor="start">REACHED THROUGH AN ADAPTER</text>
+  <rect class="step" x="932" y="132" width="296" height="30" rx="6"/>
+  <text class="name" x="946" y="152" text-anchor="start">repo</text>
+  <text class="tool" x="1214" y="152" text-anchor="end">GitHub</text>
+  <rect class="step" x="932" y="180" width="296" height="30" rx="6"/>
+  <text class="name" x="946" y="200" text-anchor="start">deploy</text>
+  <text class="tool" x="1214" y="200" text-anchor="end">Cloudflare, for an App</text>
+  <text class="group" x="932" y="344" text-anchor="start">RUN WHAT YOUR REPOSITORY HOLDS</text>
+  <rect class="step" x="932" y="350" width="296" height="30" rx="6"/>
+  <text class="name" x="946" y="370" text-anchor="start">runner</text>
+  <text class="tool" x="1214" y="370" text-anchor="end">make · just · npm</text>
+  <rect class="step" x="932" y="398" width="296" height="30" rx="6"/>
+  <text class="name" x="946" y="418" text-anchor="start">ci</text>
+  <text class="tool" x="1214" y="418" text-anchor="end">GitHub Actions</text>
+  <text class="group" x="932" y="514" text-anchor="start">WHERE THE AGENT WORKS</text>
+  <rect class="step" x="932" y="520" width="296" height="30" rx="6"/>
+  <text class="name" x="946" y="540" text-anchor="start">harness</text>
+  <text class="tool" x="1214" y="540" text-anchor="end">Claude Code</text>
+  <rect class="step" x="932" y="568" width="296" height="30" rx="6"/>
+  <text class="name" x="946" y="588" text-anchor="start">coding</text>
+  <text class="tool" x="1214" y="588" text-anchor="end">any</text>
+  <rect class="step" x="932" y="616" width="296" height="30" rx="6"/>
+  <text class="name" x="946" y="636" text-anchor="start">review</text>
+  <text class="tool" x="1214" y="636" text-anchor="end">appspin-review</text>
+  <rect class="step" x="932" y="664" width="296" height="30" rx="6"/>
+  <text class="name" x="946" y="684" text-anchor="start">backlog</text>
+  <text class="tool" x="1214" y="684" text-anchor="end">GitHub Issues</text>
+  <text class="group" x="932" y="732" text-anchor="start">OUTSIDE THE CODE</text>
+  <rect class="step" x="932" y="738" width="296" height="30" rx="6"/>
+  <text class="name" x="946" y="758" text-anchor="start">knowledge-base</text>
+  <text class="tool" x="1214" y="758" text-anchor="end">any repository</text>
+
+  <!-- arrows: solid when something is written or run, dashed when something is read -->
+  <path class="flow gate" d="M480 82 H322" marker-end="url(#a)"/>
+  <text class="label" x="401" y="75" text-anchor="middle">sends agents to</text>
+  <path class="flow" d="M320 186 H458" marker-end="url(#a)"/>
+  <text class="label" x="389" y="179" text-anchor="middle">adopt writes</text>
+  <path class="flow" d="M320 758 H440 V701 H458" marker-end="url(#a)"/>
+  <text class="label" x="380" y="751" text-anchor="middle">installs</text>
+  <path class="flow gate" d="M480 247 H440 V247 H322" marker-end="url(#a)"/>
+  <text class="label" x="381" y="240" text-anchor="middle">calls the scripts</text>
+  <path class="flow" d="M926 132 H922 V210 H926"/>
+  <path class="flow" d="M820 195 H918" marker-end="url(#a)"/>
+  <text class="label" x="869" y="188" text-anchor="middle">reaches</text>
+  <path class="flow" d="M820 247 H905 V365 H930" marker-end="url(#a)"/>
+  <text class="label" x="862" y="240" text-anchor="middle">runs on</text>
+  <path class="flow" d="M820 332 H888 V413 H930" marker-end="url(#a)"/>
+  <text class="label" x="854" y="325" text-anchor="middle">runs on</text>
+</svg>

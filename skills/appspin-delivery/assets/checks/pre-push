@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Nothing reaches main except by merge, and a release tag, v*, goes only on a
+# commit of main and is never deleted. Any other push to either is refused here,
+# by destination rather than by path. `git push
+# --no-verify` skips this and the verify below together — one escape hatch.
+zero=0000000000000000000000000000000000000000
+pushing_branch=
+refuse() {
+  printf '\npre-push refused: %s\n\n' "$1"
+  exit 1
+}
+while read -r _local_ref local_sha remote_ref _remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main) refuse "nothing reaches main except by merge.
+  Push the branch by name and open a pull request from it." ;;
+    refs/tags/v*)
+      [ "$local_sha" != "$zero" ] && git merge-base --is-ancestor "$local_sha" "refs/remotes/$1/main" 2> /dev/null && continue
+      refuse "${remote_ref#refs/tags/} is a release tag; it goes only on a commit of main, and is never deleted."
+      ;;
+  esac
+  [ "$local_sha" = "$zero" ] && continue
+  case "$remote_ref" in refs/heads/*) pushing_branch=1 ;; esac
+done
+# A tag, a release or a deletion has nothing to verify.
+[ -n "$pushing_branch" ] || exit 0
+# The project's verify, through its task runner: make when delivery.json names none.
+runner='make'
+if [ -f .config/appspin/delivery.json ]; then
+  runner=$(node -p 'JSON.parse(require("fs").readFileSync(process.argv[1])).roles?.runner ?? "make"' .config/appspin/delivery.json) || refuse "could not read .config/appspin/delivery.json."
+fi
+printf '\npre-push: running %s verify\n\n' "$runner"
+$runner verify || refuse "verify failed — push aborted."

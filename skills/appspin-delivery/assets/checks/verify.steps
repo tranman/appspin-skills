@@ -1,0 +1,9 @@
+# verify: does this change follow the rules? A step's name, then its command.
+# Keep the standard steps, then the kind's, then the project's own checks under their existing names.
+
+# every project
+secrets        gitleaks git --no-banner --redact --verbose .
+
+# a project with shell scripts of its own
+shellcheck     f=$(git ls-files -co --exclude-standard -- '*.sh' '.githooks/*' '.husky/*' ':!:.claude/' ':!:.agents/'); [ -z "$f" ] || printf '%s\n' "$f" | tr '\n' '\0' | xargs -0 shellcheck && echo "shellcheck: clean"
+tests          for t in tests/*.test.sh tests/*/*.test.sh; do [ -f "$t" ] || continue; bash "$t" || exit 1; done

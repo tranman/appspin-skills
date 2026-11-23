@@ -1,0 +1,75 @@
+# The staging gate: after each merge, smoke and e2e against staging, each a check on the merged commit,
+# which promote requires by these job names: staging-smoke and staging-e2e.
+# The wait is its own job, so a commit a later merge overtook before staging served it has its checks
+# skipped, not failed: a job can be skipped only before it starts.
+name: staging
+
+# No concurrency group and no manual trigger: a group can cancel a commit's pending run before it ever
+# checks staging, and a manual run files its checks under main's head, not the commit it tested. Re-run jobs instead.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  wait:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      served: ${{ steps.wait.outputs.served }}
+      origin: ${{ steps.wait.outputs.origin }}
+      runner: ${{ steps.wait.outputs.runner }}
+    steps:
+      # Full history: serving.sh tells a later merge from an unrelated commit.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - id: wait
+        run: bash .agents/skills/appspin-delivery/scripts/serving.sh "${{ github.sha }}"
+
+  staging-smoke:
+    needs: wait
+    if: needs.wait.outputs.served == 'yes'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: ${{ hashFiles('.nvmrc') != '' && '.nvmrc' || '' }}
+          cache: npm
+      - run: npm ci
+      - run: bash .agents/skills/appspin-delivery/scripts/accounts.sh
+        env:
+          ACCOUNTS_JSON: ${{ secrets.DELIVERY_ACCOUNTS }}
+      - run: $RUNNER smoke
+        env:
+          RUNNER: ${{ needs.wait.outputs.runner }}
+          ORIGIN: ${{ needs.wait.outputs.origin }}
+      # A pass counts only if staging still serves the commit it tested.
+      - run: bash .agents/skills/appspin-delivery/scripts/serving.sh "${{ github.sha }}" --now
+
+  staging-e2e:
+    needs: wait
+    if: needs.wait.outputs.served == 'yes'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: ${{ hashFiles('.nvmrc') != '' && '.nvmrc' || '' }}
+          cache: npm
+      - run: npm ci
+      # Playwright Test's browser, only where the App uses Playwright Test.
+      - run: if grep -qs '"@playwright/test"' package.json; then npx playwright install --with-deps chromium; fi
+      - run: bash .agents/skills/appspin-delivery/scripts/accounts.sh
+        env:
+          ACCOUNTS_JSON: ${{ secrets.DELIVERY_ACCOUNTS }}
+      - run: $RUNNER e2e
+        env:
+          RUNNER: ${{ needs.wait.outputs.runner }}
+          ORIGIN: ${{ needs.wait.outputs.origin }}
+      - run: bash .agents/skills/appspin-delivery/scripts/serving.sh "${{ github.sha }}" --now

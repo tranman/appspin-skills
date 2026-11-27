@@ -12,11 +12,21 @@ need=
   - a git repository: git init -b main"
 [ -n "$root" ] && git -C "$root" rev-parse -q --verify HEAD > /dev/null || need="$need
   - a first commit of the files to keep, a README.md where the folder is empty: git add <files> && git commit -m 'First commit'"
+command -v gh > /dev/null || need="$need
+  - the GitHub CLI, yours to install: https://cli.github.com"
 if [ -z "$root" ] || ! git -C "$root" remote get-url origin > /dev/null 2>&1; then
+  [ -z "$root" ] || [ "$(git -C "$root" symbolic-ref -q --short HEAD)" = main ] || need="$need
+  - a branch named main, since the repository's first push makes the current branch its default: git switch -c main"
   gh auth status > /dev/null 2>&1 || need="$need
   - gh signed in, yours to do in a browser: gh auth login"
   need="$need
   - a private GitHub repository as origin: gh repo create <name> --private --source . --push"
+else
+  # 2 is ls-remote's answer for a reachable origin with no main.
+  rc=0
+  GIT_TERMINAL_PROMPT=0 git -C "$root" ls-remote -q --exit-code origin refs/heads/main > /dev/null 2>&1 || rc=$?
+  [ "$rc" != 2 ] || need="$need
+  - main pushed to origin: git push -u origin main"
 fi
 [ -z "$need" ] || {
   echo "appspin-skills: not installed yet; the first step is to set up this folder with:$need"

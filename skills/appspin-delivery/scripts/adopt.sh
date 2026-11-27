@@ -51,18 +51,43 @@ if [ -n "$dirty" ]; then
   printf '%s\n' "$dirty" | sed 's/^/  /'
   exit 1
 fi
-if [ -z "$check" ] && [ "$(git -C "$repo" branch --show-current)" = main ] && git -C "$repo" rev-parse -q --verify refs/remotes/origin/main > /dev/null; then
+if [ "$(git -C "$repo" branch --show-current)" = main ]; then
+  # The installer runs the check, so git asks for no HTTPS login in it.
+  [ -z "$check" ] || export GIT_TERMINAL_PROMPT=0
   git -C "$repo" fetch -q origin || {
     echo "adopt: could not fetch origin"
     exit 1
   }
-  # The last adopt's branch, once merged, would block this one.
-  ! git -C "$repo" merge-base --is-ancestor refs/heads/adopt origin/main 2> /dev/null || git -C "$repo" branch -qD adopt
-  git -C "$repo" switch -q --no-track -c adopt origin/main || {
-    echo "adopt: could not create the adopt branch: one not merged into origin/main, or checked out elsewhere, is in the way; merge or delete it, then run adopt again"
+  git -C "$repo" rev-parse -q --verify refs/remotes/origin/main > /dev/null || {
+    echo "adopt: origin has no main yet; push it with git push -u origin main, then run adopt again"
     exit 1
   }
-  echo "adopt: on adopt"
+  if [ -n "$check" ]; then
+    # Adopt writes onto origin/main, so the check reads its files, not a local main behind it.
+    tree=$(mktemp -d) || exit 1
+    trap 'rm -rf "$tree" "$tree.index"' EXIT
+    if ! GIT_INDEX_FILE=$tree.index git -C "$repo" read-tree origin/main \
+      || ! GIT_INDEX_FILE=$tree.index git -C "$repo" checkout-index -a --prefix="$tree/"; then
+      echo "adopt: could not read origin/main"
+      exit 1
+    fi
+    repo=$tree
+  else
+    # The last adopt's branch, once merged, would block this one.
+    ! git -C "$repo" merge-base --is-ancestor refs/heads/adopt origin/main 2> /dev/null || git -C "$repo" branch -qD adopt
+    git -C "$repo" switch -q --no-track -c adopt origin/main || {
+      echo "adopt: could not create the adopt branch: one not merged into origin/main, or checked out elsewhere, is in the way; merge or delete it, then run adopt again"
+      exit 1
+    }
+    undo() {
+      [ $? = 0 ] && return
+      local f
+      for f in $wrote; do git -C "$repo" checkout -q HEAD -- "$f" 2> /dev/null || rm -f "$repo/$f"; done
+      git -C "$repo" switch -q main && git -C "$repo" branch -qD adopt && echo "adopt: back on main; the adopt branch is deleted"
+    }
+    trap undo EXIT
+    echo "adopt: on adopt"
+  fi
 fi
 
 wrote=

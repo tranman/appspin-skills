@@ -53,10 +53,10 @@ install replaces them.
    end marker.
 
 3. If the installer says `not installed yet`, it lists what the folder needs,
-   each with its command: a git repository, a first commit, or a private GitHub
-   repository as `origin`. First run the
-   steps it marks as yours, such as `gh auth login`. Expected: the agent shows
-   you the rest, with the files the first commit adds.
+   each with its command. Two steps can be yours: installing GitHub's
+   command-line tool `gh`, and signing in with `gh auth login` in a browser.
+   Run each step the installer marks as yours, if any, then tell the agent.
+   Expected: the agent shows you the rest, with the files the first commit adds.
 4. If the commands are what you want, say "yes". Expected: the agent runs them
    and runs the installer again, which installs.
 5. If the last line starts `Next: fix this`, fix what it names, then run the
